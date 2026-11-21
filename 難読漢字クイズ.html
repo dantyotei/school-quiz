@@ -1,0 +1,1126 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+<title>難読漢字クイズ</title>
+
+<style>
+
+body {
+    font-family: "メイリオ", meiryo, sans-serif;
+    background-color: rgba(226, 226, 226, 0.6);
+    margin: 0;
+    font-size: 25px;
+    background-size: cover;
+}
+
+.correct {
+    background-color: rgba(216, 255, 194, 0.6);
+}
+.incorrect {
+    background-color: rgba(255, 194, 194, 0.6);
+}
+
+#question {
+    background-color: rgb(255, 255, 255);
+    padding: 12px;
+    box-shadow: 0 5px 5px rgb(232, 232, 232);
+    text-align: center;
+    font-size:45px;
+}
+
+#header {
+    content: "";
+    display: block;
+    clear: both;
+    font-size:35px;
+}
+#point {
+    float: left;
+    padding: 0 0 0 10px;
+}
+#time {
+    float: right;
+    padding: 0 10px 0 0;
+}
+
+#QuestionResult {
+    display: flex;
+    text-align:center;
+    justify-content: center;
+    font-weight:bold;
+    font-size:40px;
+    height: 50px;
+    margin: 10px;
+}
+
+#button {
+    justify-content: center;
+    text-align: center;
+}
+
+#but1, #but2, #but3, #but4, #but5 {
+    padding: 20px 10px;
+    font-size: 80px;
+    font-weight: 600;
+    text-shadow: 1px 2px 1px rgb(168, 168, 168);
+    border-radius: 6px;
+    margin: 5px;
+    width: 15%;
+    height: auto;
+    min-height: 80px;
+    display: inline-block;
+    vertical-align: middle;
+    color: #FFF;
+    border: 1px solid #eadffc;
+}
+
+#but1 { background-color: #f13a3a; }
+#but1:hover { background-color: #c93333; }
+
+#but2 { background-color: #4114f6; }
+#but2:hover { background-color: #3511c2; }
+
+#but3 { background-color: #ffd83b; }
+#but3:hover { background-color: #dfd814; }
+
+#but4 { background-color: #14f650; }
+#but4:hover { background-color: #10bd3e; }
+
+#but5 { background-color: #14dcf6; }
+#but5:hover { background-color: #11a2b5; }
+
+.end {
+    opacity: 0.5;
+}
+
+#start {
+    width:50%;
+    height:50%;
+    padding: 5px 5px;
+    font-size:90px;
+    font-weight: 600;
+    text-shadow: 1px 2px 1px rgb(168, 168, 168);
+    border-radius: 6px;
+    justify-content: center;
+    margin: 5px;
+    color: #FFF;
+    background-color : #7df614;
+    border: 1px solid #eadffc;
+}
+#start:hover {
+    background-color : #5bb30e;
+}
+#reload {
+    width:30%;
+    padding: 5px 5px;
+    font-size:20px;
+    font-weight: 100;
+    border-radius: 6px;
+    justify-content: center;
+    margin: 5px;
+    color: #FFF;
+    background-color : #ae14f6;
+    border: 1px solid #eadffc;
+}
+#reload:hover {
+    background-color : #9c14db;
+}
+
+select {
+      font-size: 22px;
+      margin: 10px;
+      padding: 8px;
+      justify-content: center;
+}
+
+#evaluation {
+    margin: 0 10px 0 auto;
+    justify-content: right;
+    display: flex;
+}
+
+</style>
+</head>
+
+
+
+<body id="all">
+
+<div id="header">　
+    <div id="point">0点</div>
+    <div id="time">残り60秒</div>
+</div>
+<div>
+      <label for="unitSelect">ジャンル：</label>
+      <select id="unitSelect">
+        <option value="random">ランダム</option>
+        <option value="unit1">植物</option>
+        <option value="unit2">野菜</option>
+        <option value="unit3">果物</option>
+        <option value="unit4">水産</option>
+        <option value="unit5">動物</option>
+        <option value="unit6">鳥類</option>
+        <option value="unit7">虫</option>
+        <option value="unit8">道具</option>
+        <option value="unit9">食べ物</option>
+        <option value="unit10">その他</option>
+      </select>
+</div>
+<div id="question">問題文です。</div>
+<div id="QuestionResult"></div>
+<div id="congrats" style="text-align:center; font-size:24px; font-weight:bold; color:#e53935; margin-top:10px;"></div>
+
+
+<img id="image_place" class="Picture" src="1.jpg">
+<div id="button">
+<button type="button" id="but1" class="ChoiceNow1" onclick="but1()">1</button>
+<button type="button" id="but2" class="ChoiceNow2" onclick="but2()">2</button>
+<button type="button" id="but3" class="ChoiceNow3" onclick="but3()">3</button>
+<button type="button" id="but4" class="ChoiceNow4" onclick="but4()">4</button>
+<button type="button" id="but5" class="ChoiceNow5" onclick="but5()">5</button>
+<button type="button" id="start" onclick="start()">スタート</button>
+<button type="button" id="reload" onclick="reload()">もう一回チャレンジ</button>
+</div>
+<div id="evaluation"></div>
+
+<audio id="correct_audio">
+    <source src="正解.mp3" type="audio/mp3">
+</audio>
+<audio id="incorrect_audio">
+    <source src="不正解.mp3" type="audio/mp3">
+</audio>
+<audio id="but_audio">
+    <source src="決定音.mp3" type="audio/mp3">
+</audio>
+<audio id="end_audio">
+    <source src="終了.mp3" type="audio/mp3">
+</audio>
+
+<script>
+
+//この下問題です（次々足していけます※コンマを忘れずにね）
+//下にテンプレートを用意しておきます
+
+//{ q: "", a: "", img: "" },
+
+const unit1List = [
+ { q: "葵", a: "あおい", img: "" },
+ { q: "紫陽花", a: "あじさい", img: "" },
+ { q: "無花果", a: "いちじく", img: "" },
+ { q: "公孫樹", a: "いちょう", img: "" },
+ { q: "靫葛", a: "うつぼかずら", img: "" },
+ { q: "含羞草", a: "おじぎそう", img: "" },
+ { q: "女郎花", a: "おみなえし", img: "" },
+ { q: "楓", a: "かえで", img: "" },
+ { q: "樫", a: "かし", img: "" },
+ { q: "榕樹", a: "がじゅまる", img: "" },
+ { q: "蒲", a: "がま", img: "" },
+ { q: "桔梗", a: "ききょう", img: "" },
+ { q: "金木犀", a: "きんもくせい", img: "" },
+ { q: "葛", a: "くず", img: "" },
+ { q: "梔子", a: "くちなし", img: "" },
+ { q: "欅", a: "けやき", img: "" },
+ { q: "秋桜", a: "こすもす", img: "" },
+ { q: "榊", a: "さかき", img: "" },
+ { q: "山茶花", a: "さざんか", img: "" },
+ { q: "仙人掌", a: "さぼてん", img: "" },
+ { q: "百日紅", a: "さるすべり", img: "" },
+ { q: "芍薬", a: "しゃくやく", img: "" },
+ { q: "耶悉茗", a: "じゃすみん", img: "" },
+ { q: "杉", a: "すぎ", img: "" },
+ { q: "菘", a: "すずな", img: "" },
+ { q: "菫", a: "すみれ", img: "" },
+ { q: "芹", a: "せり", img: "" },
+ { q: "橘", a: "たちばな", img: "" },
+ { q: "鬱金香", a: "ちゅーりっぷ", img: "" },
+ { q: "土筆", a: "つくし", img: "" },
+ { q: "躑躅", a: "つつじ", img: "" },
+ { q: "椿", a: "つばき", img: "" },
+ { q: "石蕗", a: "つわぶき", img: "" },
+ { q: "梯姑", a: "でいご", img: "" },
+ { q: "鳥兜", a: "とりかぶと", img: "" },
+ { q: "撫子", a: "なでしこ", img: "" },
+ { q: "楢", a: "なら", img: "" },
+ { q: "接骨木", a: "にわとこ", img: "" },
+ { q: "蓮", a: "はす", img: "" },
+ { q: "薔薇", a: "ばら", img: "" },
+ { q: "柊", a: "ひいらぎ", img: "" },
+ { q: "彼岸花", a: "ひがんばな", img: "" },
+ { q: "檜", a: "ひのき", img: "" },
+ { q: "向日葵", a: "ひまわり", img: "" },
+ { q: "瓢箪", a: "ひょうたん", img: "" },
+ { q: "糸瓜", a: "へちま", img: "" },
+ { q: "蛇苺", a: "へびいちご", img: "" },
+ { q: "鳳仙花", a: "ほうせんか", img: "" },
+ { q: "鬼灯", a: "ほおずき", img: "" },
+ { q: "木瓜", a: "ぼけ", img: "" },
+ { q: "牡丹", a: "ぼたん", img: "" },
+ { q: "仏座", a: "ほとけのざ", img: "" },
+ { q: "白楊樹", a: "ぽぷら", img: "" },
+ { q: "木天蓼", a: "またたび", img: "" },
+ { q: "女無天", a: "みんと", img: "" },
+ { q: "紅葉", a: "もみじ", img: "" },
+ { q: "寄生木", a: "やどりぎ", img: "" },
+ { q: "柳", a: "やなぎ", img: "" },
+ { q: "百合", a: "ゆり", img: "" },
+ { q: "菊", a: "きく", img: "" },
+ { q: "桑", a: "くわ", img: "" },
+ { q: "水仙", a: "すいせん", img: "" },
+
+];
+
+const unit2List = [
+{ q: "枝豆", a: "えだまめ", img: "" },
+{ q: "榎茸", a: "えのきたけ", img: "" },
+{ q: "蕪", a: "かぶ", img: "" },
+{ q: "南瓜", a: "かぼちゃ", img: "" },
+{ q: "木耳", a: "きくらげ", img: "" },
+{ q: "甘藍", a: "きゃべつ", img: "" },
+{ q: "胡瓜", a: "きゅうり", img: "" },
+{ q: "牛蒡", a: "ごぼう", img: "" },
+{ q: "薩摩芋", a: "さつまいも", img: "" },
+{ q: "里芋", a: "さといも", img: "" },
+{ q: "莢隠元", a: "さやいんげん", img: "" },
+{ q: "椎茸", a: "しいたけ", img: "" },
+{ q: "紫蘇", a: "しそ", img: "" },
+{ q: "春菊", a: "しゅんぎく", img: "" },
+{ q: "生姜", a: "しょうが", img: "" },
+{ q: "筍", a: "たけのこ", img: "" },
+{ q: "玉葱", a: "たまねぎ", img: "" },
+{ q: "青梗菜", a: "ちんげんさい", img: "" },
+{ q: "冬瓜", a: "とうがん", img: "" },
+{ q: "蕃茄", a: "とまと", img: "" },
+{ q: "茄子", a: "なす", img: "" },
+{ q: "韮", a: "にら", img: "" },
+{ q: "人参", a: "にんじん", img: "" },
+{ q: "大蒜", a: "にんにく", img: "" },
+{ q: "舞茸", a: "まいたけ", img: "" },
+{ q: "糵", a: "もやし", img: "" },
+{ q: "蓮根", a: "れんこん", img: "" },
+{ q: "山椒", a: "さんしょう", img: "" },
+
+
+];
+
+const unit3List = [
+{ q: "扁桃", a: "あーもんど", img: "" },
+{ q: "鰐梨", a: "あぼかど", img: "" },
+{ q: "無花果", a: "いちじく", img: "" },
+{ q: "苺", a: "いちご", img: "" },
+{ q: "加加阿", a: "かかお", img: "" },
+{ q: "柿", a: "かき", img: "" },
+{ q: "金柑", a: "きんかん", img: "" },
+{ q: "栗", a: "くり", img: "" },
+{ q: "桜桃", a: "さくらんぼ", img: "" },
+{ q: "石榴", a: "ざくろ", img: "" },
+{ q: "梨", a: "なし", img: "" },
+{ q: "鳳梨", a: "ぱいなっぷる", img: "" },
+{ q: "八朔", a: "はっさく", img: "" },
+{ q: "甘蕉", a: "ばなな", img: "" },
+{ q: "枇杷", a: "びわ", img: "" },
+{ q: "葡萄", a: "ぶどう", img: "" },
+{ q: "蜜柑", a: "みかん", img: "" },
+{ q: "柚子", a: "ゆず", img: "" },
+{ q: "林檎", a: "りんご", img: "" },
+{ q: "茘枝", a: "らいち", img: "" },
+{ q: "檸檬", a: "れもん", img: "" },
+{ q: "西瓜", a: "すいか", img: "" },
+{ q: "甜瓜", a: "めろん", img: "" },
+{ q: "胡桃", a: "くるみ", img: "" },
+{ q: "不知火", a: "しらぬい", img: "" },
+{ q: "橙", a: "だいだい", img: "" },
+{ q: "檬果", a: "まんごー", img: "" },
+
+];
+
+const unit4List = [
+{ q: "鯏", a: "あさり", img: "" },
+{ q: "鰺", a: "あじ", img: "" },
+{ q: "雨虎", a: "あめふらし", img: "" },
+{ q: "鮎", a: "あゆ", img: "" },
+{ q: "鮑", a: "あわび", img: "" },
+{ q: "鮟鱇", a: "あんこう", img: "" },
+{ q: "烏賊", a: "いか", img: "" },
+{ q: "玉筋魚", a: "いかなご", img: "" },
+{ q: "伊勢海老", a: "いせえび", img: "" },
+{ q: "鰯", a: "いわし", img: "" },
+{ q: "鱓", a: "うつぼ", img: "" },
+{ q: "鰻", a: "うなぎ", img: "" },
+{ q: "海胆", a: "うに", img: "" },
+{ q: "海蛍", a: "うみほたる", img: "" },
+{ q: "鰕", a: "えび", img: "" },
+{ q: "鸚鵡貝", a: "おうむがい", img: "" },
+{ q: "虎魚", a: "おこぜ", img: "" },
+{ q: "老翁", a: "おじさん", img: "" },
+{ q: "牡蠣", a: "かき", img: "" },
+{ q: "鰹", a: "かつお", img: "" },
+{ q: "鰈", a: "かれい", img: "" },
+{ q: "鮍", a: "かわはぎ", img: "" },
+{ q: "鱚", a: "きす", img: "" },
+{ q: "海月", a: "くらげ", img: "" },
+{ q: "鯉", a: "こい", img: "" },
+{ q: "鮴", a: "ごり", img: "" },
+{ q: "昆布", a: "こんぶ", img: "" },
+{ q: "鮭", a: "さけ", img: "" },
+{ q: "栄螺", a: "さざえ", img: "" },
+{ q: "鯖", a: "さば", img: "" },
+{ q: "鮫", a: "さめ", img: "" },
+{ q: "鰆", a: "さわら", img: "" },
+{ q: "鯢", a: "さんしょううお", img: "" },
+{ q: "秋刀魚", a: "さんま", img: "" },
+{ q: "蜆", a: "しじみ", img: "" },
+{ q: "柳葉魚", a: "ししゃも", img: "" },
+{ q: "鱸", a: "すずき", img: "" },
+{ q: "鯣烏賊", a: "するめいか", img: "" },
+{ q: "楚蟹", a: "ずわいがに", img: "" },
+{ q: "鯛", a: "たい", img: "" },
+{ q: "大王具足虫", a: "だいおうぐそくむし", img: "" },
+{ q: "蛸", a: "たこ", img: "" },
+{ q: "鱈", a: "たら", img: "" },
+{ q: "狆穴子", a: "ちんあなご", img: "" },
+{ q: "海鼠", a: "なまこ", img: "" },
+{ q: "鯰", a: "なまず", img: "" },
+{ q: "海苔", a: "のり", img: "" },
+{ q: "鰰", a: "はたはた", img: "" },
+{ q: "蛤", a: "はまぐり", img: "" },
+{ q: "鱧", a: "はも", img: "" },
+{ q: "海星", a: "ひとで", img: "" },
+{ q: "鮃", a: "ひらめ", img: "" },
+{ q: "河豚", a: "ふぐ", img: "" },
+{ q: "鰤", a: "ぶり", img: "" },
+{ q: "鮪", a: "まぐろ", img: "" },
+{ q: "鱒", a: "ます", img: "" },
+{ q: "翻車魚", a: "まんぼう", img: "" },
+{ q: "水雲", a: "もずく", img: "" },
+{ q: "鰙", a: "わかさぎ", img: "" },
+{ q: "珊瑚", a: "さんご", img: "" },
+{ q: "公魚", a: "わかさぎ", img: "" },
+
+
+];
+
+const unit5List = [
+{ q: "青大将", a: "あおだいしょう", img: "" },
+{ q: "海豹", a: "あざらし", img: "" },
+{ q: "海驢", a: "あしか", img: "" },
+{ q: "食蟻獣", a: "ありくい", img: "" },
+{ q: "洋駱駝", a: "あるぱか", img: "" },
+{ q: "鎧鼠", a: "あるまじろ", img: "" },
+{ q: "鼬", a: "いたち", img: "" },
+{ q: "猪", a: "いのしし", img: "" },
+{ q: "井守", a: "いもり", img: "" },
+{ q: "海豚", a: "いるか", img: "" },
+{ q: "兎", a: "うさぎ", img: "" },
+{ q: "襟巻蜥蜴", a: "えりまきとかげ", img: "" },
+{ q: "膃肭臍", a: "おっとせい", img: "" },
+{ q: "河馬", a: "かば", img: "" },
+{ q: "亀", a: "かめ", img: "" },
+{ q: "鴨嘴", a: "かものはし", img: "" },
+{ q: "川獺", a: "かわうそ", img: "" },
+{ q: "狐", a: "きつね", img: "" },
+{ q: "麒麟", a: "きりん", img: "" },
+{ q: "鯨", a: "くじら", img: "" },
+{ q: "熊", a: "くま", img: "" },
+{ q: "子守熊", a: "こあら", img: "" },
+{ q: "蝙蝠", a: "こうもり", img: "" },
+{ q: "犀", a: "さい", img: "" },
+{ q: "猿", a: "さる", img: "" },
+{ q: "大熊猫", a: "じゃいあんとぱんだ", img: "" },
+{ q: "鯱", a: "しゃち", img: "" },
+{ q: "鼈", a: "すっぽん", img: "" },
+{ q: "海象", a: "せいうち", img: "" },
+{ q: "狸", a: "たぬき", img: "" },
+{ q: "石竜子", a: "とかげ", img: "" },
+{ q: "馴鹿", a: "となかい", img: "" },
+{ q: "虎", a: "とら", img: "" },
+{ q: "樹懶", a: "なまけもの", img: "" },
+{ q: "蛞蝓", a: "なめくじ", img: "" },
+{ q: "猫", a: "ねこ", img: "" },
+{ q: "鼠", a: "ねずみ", img: "" },
+{ q: "獏", a: "ばく", img: "" },
+{ q: "豹", a: "ひょう", img: "" },
+{ q: "豚", a: "ぶた", img: "" },
+{ q: "蝮", a: "まむし", img: "" },
+{ q: "土竜", a: "もぐら", img: "" },
+{ q: "山羊", a: "やぎ", img: "" },
+{ q: "駱駝", a: "らくだ", img: "" },
+{ q: "栗鼠", a: "りす", img: "" },
+{ q: "鰐", a: "わに", img: "" },
+
+
+];
+
+
+const unit6List = [
+{ q: "家鴨", a: "あひる", img: "" },
+{ q: "信天翁", a: "あほうどり", img: "" },
+{ q: "鸚哥", a: "いんこ", img: "" },
+{ q: "鵜", a: "う", img: "" },
+{ q: "鶯", a: "うぐいす", img: "" },
+{ q: "鶉", a: "うずら", img: "" },
+{ q: "鸚鵡", a: "おうむ", img: "" },
+{ q: "鵲", a: "かささぎ", img: "" },
+{ q: "金糸雀", a: "かなりあ", img: "" },
+{ q: "鴨", a: "かも", img: "" },
+{ q: "烏", a: "からす", img: "" },
+{ q: "翡翠", a: "かわせみ", img: "" },
+{ q: "啄木鳥", a: "きつつき", img: "" },
+{ q: "孔雀", a: "くじゃく", img: "" },
+{ q: "鸛", a: "こうのとり", img: "" },
+{ q: "鷺", a: "さぎ", img: "" },
+{ q: "四十雀", a: "しじゅうから", img: "" },
+{ q: "雀", a: "すずめ", img: "" },
+{ q: "鷹", a: "たか", img: "" },
+{ q: "駝鳥", a: "だちょう", img: "" },
+{ q: "燕", a: "つばめ", img: "" },
+{ q: "朱鷺", a: "とき", img: "" },
+{ q: "鳶", a: "とび", img: "" },
+{ q: "鶏", a: "にわとり", img: "" },
+{ q: "白鶺鴒", a: "はくせきれい", img: "" },
+{ q: "禿鷲", a: "はげわし", img: "" },
+{ q: "鳩", a: "はと", img: "" },
+{ q: "隼", a: "はやぶさ", img: "" },
+{ q: "雲雀", a: "ひばり", img: "" },
+{ q: "梟", a: "ふくろう", img: "" },
+{ q: "不如帰", a: "ほととぎす", img: "" },
+{ q: "杜鵑", a: "ほととぎす", img: "" },
+{ q: "時鳥", a: "ほととぎす", img: "" },
+{ q: "子規", a: "ほととぎす", img: "" },
+{ q: "目白", a: "めじろ", img: "" },
+{ q: "雷鳥", a: "らいちょう", img: "" },
+{ q: "鷲", a: "わし", img: "" },
+{ q: "百舌鳥", a: "もず", img: "" },
+
+];
+
+
+const unit7List = [
+{ q: "虻", a: "あぶ", img: "" },
+{ q: "水黽", a: "あめんぼ", img: "" },
+{ q: "蟻", a: "あり", img: "" },
+{ q: "蝗", a: "いなご", img: "" },
+{ q: "蛆", a: "うじ", img: "" },
+{ q: "螻蛄", a: "けら", img: "" },
+{ q: "蚊", a: "か", img: "" },
+{ q: "蛾", a: "が", img: "" },
+{ q: "蚕", a: "かいこ", img: "" },
+{ q: "大蚊", a: "ががんぼ", img: "" },
+{ q: "蝸牛", a: "かたつむり", img: "" },
+{ q: "金蚊", a: "かなぶん", img: "" },
+{ q: "甲虫", a: "かぶとむし", img: "" },
+{ q: "蟷螂", a: "かまきり", img: "" },
+{ q: "天牛", a: "かみきりむし", img: "" },
+{ q: "螽斯", a: "きりぎりす", img: "" },
+{ q: "銀蜻蜓", a: "ぎんやんま", img: "" },
+{ q: "蜘蛛", a: "くも", img: "" },
+{ q: "御器噛", a: "ごきぶり", img: "" },
+{ q: "蠍", a: "さそり", img: "" },
+{ q: "紙魚", a: "しみ", img: "" },
+{ q: "蝨", a: "しらみ", img: "" },
+{ q: "鈴虫", a: "すずむし", img: "" },
+{ q: "蟬", a: "せみ", img: "" },
+{ q: "蜻蛉", a: "とんぼ", img: "" },
+{ q: "蚤", a: "のみ", img: "" },
+{ q: "蠅", a: "はえ", img: "" },
+{ q: "蜂", a: "はち", img: "" },
+{ q: "蛭", a: "ひる", img: "" },
+{ q: "孑孒", a: "ぼうふら", img: "" },
+{ q: "蛍", a: "ほたる", img: "" },
+{ q: "蓑虫", a: "みのむし", img: "" },
+{ q: "蚯蚓", a: "みみず", img: "" },
+{ q: "百足", a: "むかで", img: "" },
+
+];
+
+const unit8List = [
+{ q: "団扇", a: "うちわ", img: "" },
+{ q: "独楽", a: "こま", img: "" },
+{ q: "松明", a: "たいまつ", img: "" },
+{ q: "筏", a: "いかだ", img: "" },
+{ q: "栞", a: "しおり", img: "" },
+{ q: "雑巾", a: "ぞうきん", img: "" },
+{ q: "鋸", a: "のこぎり", img: "" },
+{ q: "鑢", a: "やすり", img: "" },
+{ q: "鋏", a: "はさみ", img: "" },
+{ q: "蝋燭", a: "ろうそく", img: "" },
+{ q: "算盤", a: "そろばん", img: "" },
+{ q: "障子", a: "しょうじ", img: "" },
+{ q: "湯湯婆", a: "ゆたんぽ", img: "" },
+{ q: "箒", a: "ほうき", img: "" },
+{ q: "梯子", a: "はしご", img: "" },
+{ q: "硯", a: "すずり", img: "" },
+{ q: "賽子", a: "さいころ", img: "" },
+{ q: "双六", a: "すごろく", img: "" },
+{ q: "凧", a: "たこ", img: "" },
+{ q: "箸", a: "はし", img: "" },
+{ q: "盃", a: "さかずき", img: "" },
+{ q: "金槌", a: "かなづち", img: "" },
+{ q: "螺子", a: "ねじ", img: "" },
+{ q: "十二単", a: "じゅうにひとえ", img: "" },
+{ q: "煉瓦", a: "れんが", img: "" },
+{ q: "案山子", a: "かかし", img: "" },
+{ q: "錨", a: "いかり", img: "" },
+{ q: "炬燵", a: "こたつ", img: "" },
+{ q: "鎧", a: "よろい", img: "" },
+{ q: "銛", a: "もり", img: "" },
+{ q: "束子", a: "たわし", img: "" },
+{ q: "浴衣", a: "ゆかた", img: "" },
+
+];
+
+const unit9List = [
+{ q: "心太", a: "ところてん", img: "" },
+{ q: "天麩羅", a: "てんぷら", img: "" },
+{ q: "蒟蒻", a: "こんにゃく", img: "" },
+{ q: "羊羹", a: "ようかん", img: "" },
+{ q: "煎餅", a: "せんべい", img: "" },
+{ q: "蕨餅", a: "わらびもち", img: "" },
+{ q: "餡子", a: "あんこ", img: "" },
+{ q: "最中", a: "もなか", img: "" },
+{ q: "饅頭", a: "まんじゅう", img: "" },
+{ q: "金平糖", a: "こんぺいとう", img: "" },
+{ q: "御手洗団子", a: "みたらしだんご", img: "" },
+{ q: "炒飯", a: "ちゃーはん", img: "" },
+{ q: "拉麺", a: "らーめん", img: "" },
+{ q: "素麺", a: "そうめん", img: "" },
+{ q: "饂飩", a: "うどん", img: "" },
+{ q: "御田", a: "おでん", img: "" },
+{ q: "竹輪", a: "ちくわ", img: "" },
+{ q: "明太子", a: "めんたいこ", img: "" },
+{ q: "粥", a: "かゆ", img: "" },
+{ q: "御御御付", a: "おみおつけ", img: "" },
+{ q: "焼売", a: "しゅうまい", img: "" },
+{ q: "焙茶", a: "ほうじちゃ", img: "" },
+{ q: "珈琲", a: "こーひー", img: "" },
+{ q: "煎茶", a: "せんちゃ", img: "" },
+{ q: "外郎", a: "ういろう", img: "" },
+{ q: "粽", a: "ちまき", img: "" },
+{ q: "鶏白湯", a: "とりぱいたん", img: "" },
+{ q: "烏龍茶", a: "うーろんちゃ", img: "" },
+{ q: "黄粉", a: "きなこ", img: "" },
+
+];
+
+
+const unit10List = [
+{ q: "挨拶", a: "あいさつ", img: "" },
+{ q: "欠伸", a: "あくび", img: "" },
+{ q: "胡坐", a: "あぐら", img: "" },
+{ q: "渾名", a: "あだな", img: "" },
+{ q: "悪戯", a: "いたずら", img: "" },
+{ q: "鼾", a: "いびき", img: "" },
+{ q: "硝子", a: "がらす", img: "" },
+{ q: "曲者", a: "くせもの", img: "" },
+{ q: "健気", a: "けなげ", img: "" },
+{ q: "流石", a: "さすが", img: "" },
+{ q: "五月雨", a: "さみだれ", img: "" },
+{ q: "支度", a: "したく", img: "" },
+{ q: "素人", a: "しろうと", img: "" },
+{ q: "贔屓", a: "ひいき", img: "" },
+{ q: "日和", a: "ひより", img: "" },
+{ q: "土産", a: "みやげ", img: "" },
+{ q: "干支", a: "えと", img: "" },
+{ q: "閏年", a: "うるうどし", img: "" },
+{ q: "大雑把", a: "おおざっぱ", img: "" },
+{ q: "女将", a: "おかみ", img: "" },
+{ q: "口伝", a: "くでん", img: "" },
+{ q: "夏至", a: "げし", img: "" },
+{ q: "雑魚", a: "ざこ", img: "" },
+{ q: "終焉", a: "しゅうえん", img: "" },
+{ q: "定石", a: "じょうせき", img: "" },
+{ q: "所作", a: "しょさ", img: "" },
+{ q: "仕業", a: "しわざ", img: "" },
+{ q: "推敲", a: "すいこう", img: "" },
+{ q: "伊達", a: "だて", img: "" },
+{ q: "旋毛", a: "つむじ", img: "" },
+{ q: "常夏", a: "とこなつ", img: "" },
+{ q: "髑髏", a: "どくろ", img: "" },
+{ q: "惚気る", a: "のろける", img: "" },
+{ q: "狼煙", a: "のろし", img: "" },
+{ q: "般若", a: "はんにゃ", img: "" },
+{ q: "比喩", a: "ひゆ", img: "" },
+{ q: "風情", a: "ふぜい", img: "" },
+{ q: "愛でる", a: "めでる", img: "" },
+{ q: "面子", a: "めんつ", img: "" },
+{ q: "八百万", a: "やおよろず", img: "" },
+{ q: "咆哮", a: "ほうこう", img: "" },
+{ q: "仄めかす", a: "ほのめかす", img: "" },
+{ q: "煩悩", a: "ぼんのう", img: "" },
+{ q: "齷齪", a: "あくせく", img: "" },
+{ q: "溌剌", a: "はつらつ", img: "" },
+{ q: "狼狽", a: "ろうばい", img: "" },
+{ q: "口遊む", a: "くちずさむ", img: "" },
+{ q: "黄昏", a: "たそがれ", img: "" },
+{ q: "鬣", a: "たてがみ", img: "" },
+{ q: "雪洞", a: "ぼんぼり", img: "" },
+{ q: "御用達", a: "ごようたし", img: "" },
+{ q: "御利益", a: "ごりやく", img: "" },
+{ q: "踵", a: "かかと", img: "" },
+{ q: "踝", a: "くるぶし", img: "" },
+{ q: "生憎", a: "あいにく", img: "" },
+{ q: "強ち", a: "あながち", img: "" },
+{ q: "予め", a: "あらかじめ", img: "" },
+{ q: "潔い", a: "いさぎよい", img: "" },
+{ q: "一矢", a: "いっし", img: "" },
+{ q: "奇しくも", a: "くしくも", img: "" },
+{ q: "強面", a: "こわもて", img: "" },
+{ q: "啜る", a: "すする", img: "" },
+{ q: "一寸", a: "ちょっと", img: "" },
+{ q: "尤も", a: "もっとも", img: "" },
+{ q: "専ら", a: "もっぱら", img: "" },
+{ q: "態々", a: "わざわざ", img: "" },
+{ q: "十六夜", a: "いざよい", img: "" },
+{ q: "台詞", a: "せりふ", img: "" },
+{ q: "上手", a: "じょうず", img: "" },
+{ q: "時雨", a: "しぐれ", img: "" },
+{ q: "田舎", a: "いなか", img: "" },
+{ q: "吹雪", a: "ふぶき", img: "" },
+{ q: "大人", a: "おとな", img: "" },
+
+];
+
+
+
+//const unit〇List = [];(このかっこの間に足す)
+// 全問題まとめ（ランダムモード用）ジャンルを足したらここも足す
+const allList = [...unit1List, ...unit2List, ...unit3List, ...unit4List, ...unit5List, ...unit6List, ...unit7List, ...unit8List, ...unit9List, ...unit10List];
+
+const unitNames = {
+    unit1: "植物",
+    unit2: "野菜",
+    unit3: "果物",
+    unit4: "水産",
+    unit5: "動物",
+    unit6: "鳥類",
+    unit7: "虫",
+    unit8: "道具",
+    unit9: "食べ物",
+    unit10: "その他",
+    random: "ランダム"
+};
+
+
+var answered_number = 0;//答え終わった問題数
+var score=0;//得点
+var correct_place;
+var correct_letter;
+var time;
+var now_letter_number =0;
+var All_letter="あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽゃゅょぁぃぅぇぉっあいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわんー"
+var bgm = new Audio("BGM.mp3");
+var bgm_volume;
+var i =0;
+let currentQuizList = allList; // 初期状態は全体から
+
+
+
+
+function audio_c() {
+    document.getElementById('correct_audio').currentTime = 0; //連続クリックに対応
+    document.getElementById('correct_audio').play(); //クリックしたら音を再生
+}
+function audio_ic() {
+    document.getElementById('incorrect_audio').currentTime = 0; //連続クリックに対応
+    document.getElementById('incorrect_audio').play(); //クリックしたら音を再生
+}
+
+function audio_but() {
+    document.getElementById('but_audio').currentTime = 0; //連続クリックに対応
+    document.getElementById('but_audio').play(); //クリックしたら音を再生
+}
+
+function audio_end() {
+    
+    if(i<2){
+        document.getElementById('end_audio').play(); 
+        i++;
+    }
+    else {
+        document.getElementById('end_audio').pause(); 
+    }
+}
+
+
+function getHighScoreKeyByUnit(unit) {
+    return "high_score_" + unit;  // 例: unit1 → high_score_unit1
+}
+
+
+function updateHighScoreDisplay() {
+    const allUnits = ["random","unit1", "unit2", "unit3", "unit4", "unit5", "unit6", "unit7", "unit8", "unit9", "unit10",]; // ←必要に応じて増やしてOK
+
+    let output = "【各ジャンルの最高得点】<br>";
+    for (let unit of allUnits) {
+        const key = "high_score_" + unit;
+        const score = parseInt(localStorage.getItem(key)) || 0;
+        output += `・${unitNames[unit] || unit}：${score}点<br>`;
+    }
+
+    document.getElementById("evaluation").style.display = "";
+    document.getElementById("evaluation").innerHTML = output;
+}
+
+function select_question() {
+    let idx = Math.floor(Math.random() * currentQuizList.length);
+    question = currentQuizList[idx].q;
+    correct = currentQuizList[idx].a;
+    now_letter_number = 0;
+
+    // 問題文の表示
+    document.getElementById('question').innerHTML = question;
+
+    // 画像の表示
+    if (currentQuizList[idx].img) {
+        document.getElementById('image_place').src = currentQuizList[idx].img;
+        document.getElementById('image_place').style.display = "";
+    } else {
+        document.getElementById('image_place').style.display = "none";
+    }
+}
+
+function letter_in(){
+    document.getElementById('but1').innerHTML = letterA
+    document.getElementById('but2').innerHTML = letterB
+    document.getElementById('but3').innerHTML = letterC
+    document.getElementById('but4').innerHTML = letterD
+    document.getElementById('but5').innerHTML = letterE
+}
+
+function inner_button(){
+    correct_place = Math.floor(Math.random() * 5 + 1);
+    correct_letter = correct.charAt(now_letter_number);
+
+    // すでに使った文字（正解文字も含めて）を避ける
+    const used = new Set([correct_letter]);
+    const pickUnique = () => {
+        let ch;
+        do {
+            ch = All_letter.charAt(Math.floor(Math.random() * All_letter.length));
+        } while (used.has(ch));  // 既出や正解と同じは回避
+        used.add(ch);
+        return ch;
+    };
+
+    // 重複なしの候補で埋める
+    letterA = pickUnique();
+    letterB = pickUnique();
+    letterC = pickUnique();
+    letterD = pickUnique();
+    letterE = pickUnique();
+
+    // 正解を1か所だけ上書き
+    if (correct_place <= 1) {
+        letterA = correct_letter;
+    } else if (correct_place <= 2) {
+        letterB = correct_letter;
+    } else if (correct_place <= 3) {
+        letterC = correct_letter;
+    } else if (correct_place <= 4) {
+        letterD = correct_letter;
+    } else {
+        letterE = correct_letter;
+    }
+
+    letter_in();
+}
+
+function proceedNext(delay = 800) {
+  // 連打防止で一時的に無効化
+  ["but1","but2","but3","but4","but5"].forEach(id => {
+    document.getElementById(id).disabled = true;
+  });
+
+  setTimeout(() => {
+    bc_normal();       // 背景色リセット
+    select_question(); // ←ここで初めて問題を切り替える
+    inner_button();    // 選択肢更新
+    next_question();   // メッセージ消去＆新しい問題文表示
+
+    // ボタンを再有効化
+    ["but1","but2","but3","but4","but5"].forEach(id => {
+      document.getElementById(id).disabled = false;
+    });
+  }, delay);
+}
+
+
+function but1(){
+  now_letter_number++;
+
+  if (letterA != correct_letter){
+    document.getElementById('QuestionResult').innerHTML =
+      "不正解…　正解は「 " + correct + " 」";
+    document.getElementById("all").classList.add("incorrect");
+    audio_ic();
+
+    // ここでは問題を切り替えず、少し待ってから進む
+    proceedNext(800);
+  }
+  else if (letterA == correct_letter && correct.length > now_letter_number){
+    // まだ単語が完成していない：そのまま続行
+    audio_but();
+    inner_button();
+  }
+  else if (letterA == correct_letter && correct.length == now_letter_number){
+    // 正解で語が完成
+    score = score + correct.length;
+    document.getElementById('point').innerHTML = score + "点";
+    document.getElementById('QuestionResult').innerHTML = " 正解!";
+    document.getElementById("all").classList.add("correct");
+    audio_c();
+
+    proceedNext(300);
+  }
+}
+
+function but2(){
+  now_letter_number++;
+
+  if (letterB != correct_letter){
+    document.getElementById('QuestionResult').innerHTML =
+      "不正解…　正解は「 " + correct + " 」";
+    document.getElementById("all").classList.add("incorrect");
+    audio_ic();
+
+    // ここでは問題を切り替えず、少し待ってから進む
+    proceedNext(800);
+  }
+  else if (letterB == correct_letter && correct.length > now_letter_number){
+    // まだ単語が完成していない：そのまま続行
+    audio_but();
+    inner_button();
+  }
+  else if (letterB == correct_letter && correct.length == now_letter_number){
+    // 正解で語が完成
+    score = score + correct.length;
+    document.getElementById('point').innerHTML = score + "点";
+    document.getElementById('QuestionResult').innerHTML = " 正解!";
+    document.getElementById("all").classList.add("correct");
+    audio_c();
+
+    proceedNext(300);
+  }
+}
+
+function but3(){
+  now_letter_number++;
+
+  if (letterC != correct_letter){
+    document.getElementById('QuestionResult').innerHTML =
+      "不正解…　正解は「 " + correct + " 」";
+    document.getElementById("all").classList.add("incorrect");
+    audio_ic();
+
+    // ここでは問題を切り替えず、少し待ってから進む
+    proceedNext(800);
+  }
+  else if (letterC == correct_letter && correct.length > now_letter_number){
+    // まだ単語が完成していない：そのまま続行
+    audio_but();
+    inner_button();
+  }
+  else if (letterC == correct_letter && correct.length == now_letter_number){
+    // 正解で語が完成
+    score = score + correct.length;
+    document.getElementById('point').innerHTML = score + "点";
+    document.getElementById('QuestionResult').innerHTML = " 正解!";
+    document.getElementById("all").classList.add("correct");
+    audio_c();
+
+    proceedNext(300);
+  }
+}
+
+function but4(){
+  now_letter_number++;
+
+  if (letterD != correct_letter){
+    document.getElementById('QuestionResult').innerHTML =
+      "不正解…　正解は「 " + correct + " 」";
+    document.getElementById("all").classList.add("incorrect");
+    audio_ic();
+
+    // ここでは問題を切り替えず、少し待ってから進む
+    proceedNext(800);
+  }
+  else if (letterD == correct_letter && correct.length > now_letter_number){
+    // まだ単語が完成していない：そのまま続行
+    audio_but();
+    inner_button();
+  }
+  else if (letterD == correct_letter && correct.length == now_letter_number){
+    // 正解で語が完成
+    score = score + correct.length;
+    document.getElementById('point').innerHTML = score + "点";
+    document.getElementById('QuestionResult').innerHTML = " 正解!";
+    document.getElementById("all").classList.add("correct");
+    audio_c();
+
+    proceedNext(300);
+  }
+}
+
+function but5(){
+  now_letter_number++;
+
+  if (letterE != correct_letter){
+    document.getElementById('QuestionResult').innerHTML =
+      "不正解…　正解は「 " + correct + " 」";
+    document.getElementById("all").classList.add("incorrect");
+    audio_ic();
+
+    // ここでは問題を切り替えず、少し待ってから進む
+    proceedNext(800);
+  }
+  else if (letterE == correct_letter && correct.length > now_letter_number){
+    // まだ単語が完成していない：そのまま続行
+    audio_but();
+    inner_button();
+  }
+  else if (letterE == correct_letter && correct.length == now_letter_number){
+    // 正解で語が完成
+    score = score + correct.length;
+    document.getElementById('point').innerHTML = score + "点";
+    document.getElementById('QuestionResult').innerHTML = " 正解!";
+    document.getElementById("all").classList.add("correct");
+    audio_c();
+
+    proceedNext(300);
+  }
+}
+
+function bc_normal(){
+    document.getElementById("all").classList.remove("correct");
+    document.getElementById("all").classList.remove("incorrect");
+}
+
+function next_question(){
+    document.getElementById('question').innerHTML = question
+    document.getElementById('QuestionResult').innerHTML = ""
+}
+
+function start() {
+    document.getElementById('QuestionResult').innerHTML = "";
+
+    const selectedUnit = document.getElementById("unitSelect").value;
+    if (selectedUnit === "unit1") {
+        currentQuizList = unit1List;
+    } else if (selectedUnit === "unit2") {
+        currentQuizList = unit2List;
+    } else if (selectedUnit === "unit3") {
+        currentQuizList = unit3List;
+    } else if (selectedUnit === "unit4") {
+        currentQuizList = unit4List;
+    } else if (selectedUnit === "unit5") {
+        currentQuizList = unit5List;
+    } else if (selectedUnit === "unit6") {
+        currentQuizList = unit6List;
+    } else if (selectedUnit === "unit7") {
+        currentQuizList = unit7List;
+    } else if (selectedUnit === "unit8") {
+        currentQuizList = unit8List;
+    } else if (selectedUnit === "unit9") {
+        currentQuizList = unit9List;
+    } else if (selectedUnit === "unit10") {
+        currentQuizList = unit10List;
+    } else {
+        currentQuizList = allList;
+    }
+    
+    document.getElementById("unitSelect").disabled = true;
+
+    document.getElementById("but1").style.display = "";
+    document.getElementById("but2").style.display = "";
+    document.getElementById("but3").style.display = "";
+    document.getElementById("but4").style.display = "";
+    document.getElementById("but5").style.display = "";
+    document.getElementById("start").style.display = "none";
+    document.getElementById("evaluation").style.display = "none";
+
+    bgm.play();
+
+    select_question();
+    inner_button();
+    next_question();
+    timerstart();
+}
+
+function end(){
+    document.getElementById("but1").disabled = true;
+    document.getElementById("but2").disabled = true;
+    document.getElementById("but3").disabled = true;
+    document.getElementById("but4").disabled = true;
+    document.getElementById("but5").disabled = true;
+
+    document.getElementById("but1").classList.add("end");
+    document.getElementById("but2").classList.add("end");
+    document.getElementById("but3").classList.add("end");
+    document.getElementById("but4").classList.add("end");
+    document.getElementById("but5").classList.add("end");
+
+    bgm.pause();
+    audio_end();
+    document.getElementById("reload").style.display ="";
+    document.getElementById("unitSelect").disabled = true;
+    document.getElementById('QuestionResult').innerHTML = "時間切れ…　正解は「 " + correct + " 」"
+    
+    open_score();
+
+}
+
+function open_score() {
+    const selectedUnit = document.getElementById("unitSelect").value;
+    const highScoreKey = "high_score_" + selectedUnit;
+    const storedHighScore = parseInt(localStorage.getItem(highScoreKey)) || 0;
+
+    // メッセージ初期化
+    document.getElementById("congrats").innerHTML = "";
+
+    if (score >= storedHighScore) {
+        localStorage.setItem(highScoreKey, score);
+        document.getElementById("congrats").innerHTML = "🎉 最高記録を更新！おめでとう！ 🎉";
+    }
+
+    updateHighScoreDisplay();
+}
+
+function reload() {
+    window.location.reload();
+}
+
+function showtime() {
+    time--;
+    if(time<0){
+        end();
+        document.getElementById("time").innerHTML = "終了！"
+    }
+    else{
+        document.getElementById("time").innerHTML = "残り" + time + "秒"
+    }
+}
+
+
+function timerstart() {
+    time = 60;// カウンタのリセット
+    setInterval('showtime()',1000); // タイマーをセット(1000ms間隔)
+}
+
+bgm.loop = true;
+
+document.getElementById('question').innerHTML = "制限時間は60秒！文字数が得点になるので頑張って！"
+
+document.getElementById("image_place").style.display ="none";
+document.getElementById("but1").style.display ="none";
+document.getElementById("but2").style.display ="none";
+document.getElementById("but3").style.display ="none";
+document.getElementById("but4").style.display ="none";
+document.getElementById("but5").style.display ="none";
+document.getElementById("reload").style.display ="none";
+
+window.addEventListener("load", updateHighScoreDisplay);
+
+
+</script>
+</body>
+</html>
